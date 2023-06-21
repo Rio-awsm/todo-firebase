@@ -2,38 +2,41 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 import { auth } from "../firebase/firebase";
-import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup  } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 
 const provider = new GoogleAuthProvider();
-
 
 const RegisterForm = () => {
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
-   const signupHandler = async () => {
-    if(! email || ! username || ! password) return;
+  const signupHandler = async () => {
+    if (!email || !username || !password) return;
     try {
-       const user= await createUserWithEmailAndPassword(
-        auth, 
-        email, 
-        password
-        );
-        await updateProfile(auth.currentUser, {
-            displayName: username
-        })
-       console.log(user);
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, {
+        displayName: username,
+      });
+      console.log(user);
     } catch (error) {
-        console.log("An error occured", error);
+      console.error("An error occured", error);
     }
-   }
+  };
 
-   const signinwithGoogle = async () =>{
-         const user = await signInWithPopup(auth , provider);
-         console.log(user);
-   }
- 
+  const signinwithGoogle = async () => {
+    try {
+      const user = await signInWithPopup(auth, provider);
+      console.log(user);
+    } catch (error) {
+      console.error("An error occured", error);
+    }
+  };
 
   return (
     <main className="flex lg:h-[100vh]">
@@ -47,8 +50,10 @@ const RegisterForm = () => {
             </span>
           </p>
 
-          <div className="bg-black/[0.05] text-white w-full py-4 mt-10 rounded-full transition-transform hover:bg-black/[0.8] active:scale-90 flex justify-center items-center gap-4 cursor-pointer group"
-          onClick={signinwithGoogle}>
+          <div
+            className="bg-black/[0.05] text-white w-full py-4 mt-10 rounded-full transition-transform hover:bg-black/[0.8] active:scale-90 flex justify-center items-center gap-4 cursor-pointer group"
+            onClick={signinwithGoogle}
+          >
             <FcGoogle size={22} />
             <span className="font-medium text-black group-hover:text-white">
               Login with Google
@@ -83,12 +88,13 @@ const RegisterForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button className="bg-black text-white w-44 py-4 mt-10 rounded-full transition-transform hover:bg-black/[0.8] active:scale-90"
-            onClick={signupHandler}>
+            <button
+              className="bg-black text-white w-44 py-4 mt-10 rounded-full transition-transform hover:bg-black/[0.8] active:scale-90"
+              onClick={signupHandler}
+            >
               Sign Up
             </button>
           </form>
-
         </div>
       </div>
       <div
